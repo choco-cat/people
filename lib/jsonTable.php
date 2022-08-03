@@ -2,7 +2,6 @@
 
 class JsonTable
 {
-
     protected $jsonFile;
     protected $fileHandle;
     protected $fileData = array();
@@ -136,5 +135,4 @@ class JsonTable
             throw new Exception("New table couldn't be created: " . $tablePath);
         }
     }
-
 }
