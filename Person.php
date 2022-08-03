@@ -28,15 +28,18 @@ class Person
             'gender' => $gender,
             'city' => $city,
         );
-        $this->data = $this->db->select("users", "id", $id);
-        if (count($this->data) === 0) {
+        $selectResult = $this->db->select("users", "id", $id);
+        if (count($selectResult) === 0) {
             $this->save();
+        } else {
+            $this->data = $selectResult[0];
         }
     }
 
     public function save()
     {
         $this->db->insert("users", $this->userArray, FALSE);
+        $this->data = $this->userArray;
     }
 
     public function remove()
@@ -53,5 +56,10 @@ class Person
             $age--;
         }
         return $age;
+    }
+
+    public static function genderToText($gender)
+    {
+        return $gender === 0 ? 'муж' : 'жен';
     }
 }
