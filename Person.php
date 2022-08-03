@@ -13,21 +13,18 @@ class Person
     public $birthday;
     public $gender;
     public $city;
-    public $userArray;
     public $data;
     private $db;
 
     public function __construct($id, $firstname, $lastname, $birthday, $gender, $city)
     {
         $this->db = new JsonDB("./data/");
-        $this->userArray = array(
-            'id' => $id,
-            'firstname' => $firstname,
-            'lastname' => $lastname,
-            'birthday' => $birthday,
-            'gender' => $gender,
-            'city' => $city,
-        );
+        $this->id = $id;
+        $this->firstname = $firstname;
+        $this->lastname = $lastname;
+        $this->birthday = $birthday;
+        $this->gender = $gender;
+        $this->city = $city;
         $selectResult = $this->db->select("users", "id", $id);
         if (count($selectResult) === 0) {
             $this->save();
@@ -38,8 +35,16 @@ class Person
 
     public function save()
     {
-        $this->db->insert("users", $this->userArray, FALSE);
-        $this->data = $this->userArray;
+        $userArray = array(
+            'id' => $this->id,
+            'firstname' => $this->firstname,
+            'lastname' => $this->lastname,
+            'birthday' => $this->birthday,
+            'gender' => $this->gender,
+            'city' => $this->city,
+        );
+        $this->db->insert("users", $userArray, FALSE);
+        $this->data = $userArray;
     }
 
     public function remove()
@@ -61,5 +66,16 @@ class Person
     public static function genderToText($gender)
     {
         return $gender === 0 ? 'муж' : 'жен';
+    }
+
+    public function formatFields()
+    {
+        $formatObj = new StdClass();
+        foreach (get_object_vars($this) as $key => $value) {
+            $formatObj->$key = $value;
+        }
+        $formatObj->age = self::birthdayToAge($this->data['birthday']);
+        $formatObj->genderText = self::genderToText($this->data['gender']);
+        return $formatObj;
     }
 }
