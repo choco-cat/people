@@ -11,15 +11,17 @@ class PersonList
     private $db;
 
     //TODO: добавить операции сравнения
-    public function __construct($personIds, $field = null, $fieldValue = null)
+    public function __construct($personIds, $field = null, $fieldValue = null, $operand = '=')
     {
         $this->db = new JsonDB('./data/');
         $this->personIds = $personIds;
-        $searchResult = $field && $fieldValue ?
-            $this->db->select('users', $field, $fieldValue)
-            : $this->db->select('users');
-        foreach ($searchResult as $person) {
-            $this->personIds[] = $person['id'];
+        if ($field && $fieldValue) {
+            foreach ($this->personIds as $key => $personId) {
+                $searchResult = $this->db->select('users', ['id', $field], [$personId, $fieldValue]);
+                if (count($searchResult) === 0) {
+                    unset($this->personIds[$key]);
+                }
+            }
         }
     }
 

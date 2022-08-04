@@ -28,7 +28,12 @@ class Person
         if (count($selectResult) === 0) {
             $this->save();
         } else {
-            $this->data = $selectResult[0];
+            $this->id = $selectResult[0]['id'];
+            $this->firstname = $selectResult[0]['firstname'];
+            $this->lastname = $selectResult[0]['lastname'];
+            $this->birthday = $selectResult[0]['birthday'];
+            $this->gender = $selectResult[0]['gender'];
+            $this->city = $selectResult[0]['city'];
         }
     }
 
@@ -43,13 +48,11 @@ class Person
             'city' => $this->city,
         );
         $this->db->insert('users', $userArray, FALSE);
-        $this->data = $userArray;
     }
 
     public function remove()
     {
-        $this->db->delete('users', 'id', $this->data['id']);
-        $this->data = null;
+        $this->db->delete('users', 'id', $this->id);
     }
 
     public static function birthdayToAge($birthday)
@@ -73,8 +76,8 @@ class Person
         foreach (get_object_vars($this) as $key => $value) {
             $formatObj->$key = $value;
         }
-        $formatObj->age = self::birthdayToAge($this->data['birthday']);
-        $formatObj->genderText = self::genderToText($this->data['gender']);
+        $formatObj->age = self::birthdayToAge($this->birthday);
+        $formatObj->genderText = self::genderToText($this->gender);
         return $formatObj;
     }
 }

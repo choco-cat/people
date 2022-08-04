@@ -48,8 +48,25 @@ class JsonTable
     public function select($key, $val = 0)
     {
         $result = array();
-        if (is_array($key)) $result = $this->select($key[1], $key[2]);
-        else {
+        // Если совмещеные условия
+        if (is_array($key) && is_array($val)) {
+            $data = $this->fileData;
+            foreach ($data as $_key => $_val) {
+                $success = true;
+                foreach ($key as $index => $field) {
+                    if (isset($data[$_key][$field])) {
+                        if ($data[$_key][$field] !== $val[$index]) {
+                            $success = false;
+                        }
+                    }
+                }
+                if ($success) {
+                    $result[] = $_val;
+                }
+            }
+        } elseif (is_array($key)) {
+            $result = $this->select($key[1], $key[2]);
+        } else {
             $data = $this->fileData;
             foreach ($data as $_key => $_val) {
                 if (isset($data[$_key][$key])) {
