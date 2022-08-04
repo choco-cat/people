@@ -5,6 +5,10 @@
  * удаляет пользователя с помощью класса Person.
  */
 
+if (!class_exists('Person')){
+    die('class Person not exists!');
+}
+
 class PersonList
 {
     public $personIds;
