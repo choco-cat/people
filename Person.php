@@ -12,7 +12,6 @@ class Person
     public $birthday;
     public $gender;
     public $city;
-    public $data;
     private $db;
 
     public function __construct($id, $firstname, $lastname, $birthday, $gender, $city)

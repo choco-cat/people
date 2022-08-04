@@ -45,7 +45,13 @@ class JsonTable
         return $this->fileData;
     }
 
-    public function select($key, $val = 0)
+    public function hotSelect($sortFunc)
+    {
+        $data = $this->fileData;
+        return array_filter($data, $sortFunc);
+    }
+
+    public function select($key, $val = 0, $operator = '=')
     {
         $result = array();
         // Если совмещеные условия
@@ -55,8 +61,27 @@ class JsonTable
                 $success = true;
                 foreach ($key as $index => $field) {
                     if (isset($data[$_key][$field])) {
-                        if ($data[$_key][$field] !== $val[$index]) {
-                            $success = false;
+                        switch ($operator) {
+                            case '=':
+                                if ($data[$_key][$field] !== $val[$index]) {
+                                    $success = false;
+                                }
+                                break;
+                            case '!=':
+                                 if ($data[$_key][$field] == $val[$index]) {
+                                    $success = false;
+                                }
+                                break;
+                            case '>':
+                                if ($data[$_key][$field] <= $val[$index]) {
+                                    $success = false;
+                                }
+                                break;
+                            case '<':
+                                if ($data[$_key][$field] >= $val[$index]) {
+                                    $success = false;
+                                }
+                                break;
                         }
                     }
                 }
@@ -65,13 +90,32 @@ class JsonTable
                 }
             }
         } elseif (is_array($key)) {
-            $result = $this->select($key[1], $key[2]);
+            $result = $this->select($key[1], $key[2], $operator);
         } else {
             $data = $this->fileData;
             foreach ($data as $_key => $_val) {
                 if (isset($data[$_key][$key])) {
-                    if ($data[$_key][$key] == $val) {
-                        $result[] = $data[$_key];
+                    switch ($operator) {
+                        case '=':
+                            if ($data[$_key][$key] === $val) {
+                                $result[] = $data[$_key];
+                            }
+                            break;
+                        case '!=':
+                            if ($data[$_key][$key] != $val) {
+                                $result[] = $data[$_key];
+                            }
+                            break;
+                        case '>':
+                            if ($data[$_key][$key] > $val) {
+                                $result[] = $data[$_key];
+                            }
+                            break;
+                        case '<':
+                            if ($data[$_key][$key] < $val) {
+                                $result[] = $data[$_key];
+                            }
+                            break;
                     }
                 }
             }
