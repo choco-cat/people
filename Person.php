@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Класс Persone осуществляет сохранение полей пользователя, удаление
+ * Класс Person осуществляет сохранение полей пользователя, удаление
  * пользователя из БД, изменение полей.
  */
 class Person
@@ -17,14 +17,14 @@ class Person
 
     public function __construct($id, $firstname, $lastname, $birthday, $gender, $city)
     {
-        $this->db = new JsonDB("./data/");
+        $this->db = new JsonDB('./data/');
         $this->id = $id;
         $this->firstname = $firstname;
         $this->lastname = $lastname;
         $this->birthday = $birthday;
         $this->gender = $gender;
         $this->city = $city;
-        $selectResult = $this->db->select("users", "id", $id);
+        $selectResult = $this->db->select('users', 'id', $id);
         if (count($selectResult) === 0) {
             $this->save();
         } else {
@@ -42,13 +42,13 @@ class Person
             'gender' => $this->gender,
             'city' => $this->city,
         );
-        $this->db->insert("users", $userArray, FALSE);
+        $this->db->insert('users', $userArray, FALSE);
         $this->data = $userArray;
     }
 
     public function remove()
     {
-        $this->db->delete("users", "id", $this->data['id']);
+        $this->db->delete('users', 'id', $this->data['id']);
         $this->data = null;
     }
 
