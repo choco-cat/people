@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class JsonTable
+ * Сущность таблицы в БД
+ * Имитирует запросы на выборку, обновление, удаление, записей таблицы
+ */
 class JsonTable
 {
     protected $jsonFile;
@@ -60,29 +65,8 @@ class JsonTable
             foreach ($data as $_key => $_val) {
                 $success = true;
                 foreach ($key as $index => $field) {
-                    if (isset($data[$_key][$field])) {
-                        switch ($operator) {
-                            case '=':
-                                if ($data[$_key][$field] !== $val[$index]) {
-                                    $success = false;
-                                }
-                                break;
-                            case '!=':
-                                 if ($data[$_key][$field] == $val[$index]) {
-                                    $success = false;
-                                }
-                                break;
-                            case '>':
-                                if ($data[$_key][$field] <= $val[$index]) {
-                                    $success = false;
-                                }
-                                break;
-                            case '<':
-                                if ($data[$_key][$field] >= $val[$index]) {
-                                    $success = false;
-                                }
-                                break;
-                        }
+                    if (isset($_val[$field])) {
+                        $this->compare($_val[$field], $val[$index], $operator, $success);
                     }
                 }
                 if ($success) {
@@ -94,33 +78,42 @@ class JsonTable
         } else {
             $data = $this->fileData;
             foreach ($data as $_key => $_val) {
-                if (isset($data[$_key][$key])) {
-                    switch ($operator) {
-                        case '=':
-                            if ($data[$_key][$key] === $val) {
-                                $result[] = $data[$_key];
-                            }
-                            break;
-                        case '!=':
-                            if ($data[$_key][$key] != $val) {
-                                $result[] = $data[$_key];
-                            }
-                            break;
-                        case '>':
-                            if ($data[$_key][$key] > $val) {
-                                $result[] = $data[$_key];
-                            }
-                            break;
-                        case '<':
-                            if ($data[$_key][$key] < $val) {
-                                $result[] = $data[$_key];
-                            }
-                            break;
+                $success = true;
+                if (isset($_val[$key])) {
+                    $this->compare($_val[$key], $val, $operator, $success);
+                    if ($success) {
+                        $result[] = $_val;
                     }
                 }
             }
         }
         return $result;
+    }
+
+    public function compare($value1, $value2, $operator, &$success)
+    {
+        switch ($operator) {
+            case '=':
+                if ($value1 !== $value2) {
+                    $success = false;
+                }
+                break;
+            case '!=':
+                if ($value1 === $value2) {
+                    $success = false;
+                }
+                break;
+            case '>':
+                if ($value1 <= $value2) {
+                    $success = false;
+                }
+                break;
+            case '<':
+                if ($value1 >= $value2) {
+                    $success = false;
+                }
+                break;
+        }
     }
 
     public function updateAll($data = array())

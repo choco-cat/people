@@ -20,7 +20,11 @@ class PersonList
         $this->personIds = $personIds;
         if ($field && $fieldValue) {
             foreach ($this->personIds as $key => $personId) {
-                $searchResult = $this->db->select('users', ['id', $field], [$personId, $fieldValue], $operator);
+                if (is_array($field) && is_array($fieldValue)) {
+                    $searchResult = $this->db->select('users', array_merge(['id'], $field),  array_merge([$personId], $fieldValue), $operator);
+                } else {
+                    $searchResult = $this->db->select('users', ['id', $field], [$personId, $fieldValue], $operator);
+                }
                 if (count($searchResult) === 0) {
                     unset($this->personIds[$key]);
                 }
