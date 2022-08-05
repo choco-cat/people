@@ -63,7 +63,7 @@ class PersonList
                 $persons[] = new Person(
                     $personDB['id'],
                     $personDB['firstname'],
-                    $personDB['lasname'],
+                    $personDB['lastname'],
                     $personDB['birthday'],
                     $personDB['gender'],
                     $personDB['city'],

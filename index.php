@@ -7,7 +7,7 @@ define('BASE_PATH', dirname(realpath(__FILE__)) . '/');
 include (BASE_PATH . 'helpers/autoload.php');
 
 new Person(1, 'Nata', 'Kot', '01.12.2000', 1, 'Mozyr');
-$person2 = new Person(2, 'Nata2', 'Kot2', '01.12.2002', 1, 'Minsk');
+$person2 = new Person(22, 'Nata22', 'Kot22', '01.12.2022', 1, 'Minsk');
 new Person(3, 'Nata3', 'Kot3', '01.12.2003', 0, 'Minsk');
 $person33 = new Person(33, 'Nata33', 'Kot3', '01.12.2003', 0, 'Minsk');
 $person35 = new Person(35, 'Nata34', 'Kot34', '01.12.2003', 0, 'Mozyr');

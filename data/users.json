@@ -40,4 +40,13 @@
         "gender": 0,
         "city": "Minsk"
     }
+,
+    {
+        "id": 22,
+        "firstname": "Nata22",
+        "lastname": "Kot22",
+        "birthday": "01.12.2022",
+        "gender": 1,
+        "city": "Minsk"
+    }
 ]
