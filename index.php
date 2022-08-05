@@ -20,19 +20,19 @@ echo '<br>formatPerson:<br>';
 print_r($formatPerson);
 
 echo '<br><br>persons list [3, 33, 35]:<br>';
-echo(new PersonList([3, 33, 35]));
+echo new PersonList([3, 33, 35]);
 
 echo '<br><br>persons list [1, 2, 3, 33, 35], city != Mozyr:<br>';
-echo(new PersonList([1, 2, 3, 33, 35], 'city', 'Mozyr', '!='));
+echo new PersonList([1, 2, 3, 33, 35], 'city', 'Mozyr', '!=');
 
 echo '<br><br>persons list [3, 33, 35], city = Mozyr:<br>';
-echo(new PersonList([3, 33, 35], 'city', 'Mozyr', '='));
+echo new PersonList([3, 33, 35], 'city', 'Mozyr', '=');
 
 echo '<br><br>persons list [1, 2, 3, 33, 35], lastname > Kot2:<br>';
-echo(new PersonList([1, 2, 3, 33, 35], 'lastname', 'Kot2', '>'));
+echo new PersonList([1, 2, 3, 33, 35], 'lastname', 'Kot2', '>');
 
 echo '<br><br>persons list [1, 2, 3, 33, 35], gender = 1:<br>';
-echo(new PersonList([1, 2, 3, 33, 35], 'gender', '1', '='));
+echo new PersonList([1, 2, 3, 33, 35], 'gender', '1', '=');
 
 echo '<br><br>persons list [1, 2, 3, 33, 35], gender = 1, city = Mozyr:<br>';
-echo(new PersonList([1, 2, 3, 33, 35], ['gender', 'city'], ['1', 'Mozyr'], '='));
+echo new PersonList([1, 2, 3, 33, 35], ['gender', 'city'], ['1', 'Mozyr'], '=');
