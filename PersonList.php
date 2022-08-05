@@ -16,19 +16,37 @@ class PersonList
 
     public function __construct($personIds, $field = null, $fieldValue = null, $operator = null)
     {
-        $this->db = new JsonDB('./data/');
+        $this->db = new JsonDB('./data/');;
         $this->personIds = $personIds;
+
+
         if ($field && $fieldValue) {
+            $resultArr = [];
             foreach ($this->personIds as $key => $personId) {
+
                 if (is_array($field) && is_array($fieldValue)) {
-                    $searchResult = $this->db->select('users', array_merge(['id'], $field),  array_merge([$personId], $fieldValue), $operator);
+                    $fieldArray = array();
+                    $fieldArray[] = [ 'id', $personId, '='];
+                    foreach ($field as $key => $f) {
+                        $fieldArray[] = array($f, $fieldValue[$key], $operator);
+                    }
+
+                    $searchResult = $this->db->select( 'id'  )
+                        ->from( 'users.json' )
+                        ->where( $fieldArray, 'AND' )
+                        ->get();
                 } else {
-                    $searchResult = $this->db->select('users', ['id', $field], [$personId, $fieldValue], $operator);
+                    $searchResult = $this->db->select('id')
+                        ->from('users.json')
+                        ->where([['id', $personId, '='], [$field, $fieldValue, $operator]], 'AND')
+                        ->get();
                 }
-                if (count($searchResult) === 0) {
-                    unset($this->personIds[$key]);
+
+                if (count($searchResult) > 0) {
+                    $resultArr[] = $personId;
                 }
             }
+            $this->personIds = $resultArr;
         }
     }
 
@@ -36,7 +54,11 @@ class PersonList
     {
         $persons = array();
         foreach ($this->personIds as $personId) {
-            $searchResult = $this->db->select('users', 'id', $personId);
+            $searchResult = $this->db->select( 'id'  )
+                ->from( 'users.json' )
+                ->where( [ 'id' => $personId] )
+                ->get();
+
             if (count($searchResult) > 0) {
                 $personDB = $searchResult[0];
                 $persons[] = new Person(
@@ -58,5 +80,11 @@ class PersonList
         foreach ($persons as $person) {
             $person->remove();
         }
+    }
+
+    public function __toString()
+    {
+        $persons = $this->get();
+        return implode('; ', $persons);
     }
 }

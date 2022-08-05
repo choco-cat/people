@@ -60,7 +60,16 @@ class JsonTable
     {
         $result = array();
         // Если совмещеные условия
+        if (is_array($key) && !is_array($key[0])) {
+            echo '<br>-------------------------KEY--<br>'. $operator;
+            print_r($key);
+            echo '<br>-------------------------VAL--<br>';
+            print_r($val);
+            $result = $this->select($key[1], $key[2], $key[3]);
+        }
+
         if (is_array($key) && is_array($val)) {
+            echo 'условие сложное';
             $data = $this->fileData;
             foreach ($data as $_key => $_val) {
                 $success = true;
@@ -73,8 +82,8 @@ class JsonTable
                     $result[] = $_val;
                 }
             }
-        } elseif (is_array($key)) {
-            $result = $this->select($key[1], $key[2], $operator);
+        } elseif (is_array($key) && !is_array($key[0])) {
+            $result = $this->select($key[1], $key[2], $key[3]);
         } else {
             $data = $this->fileData;
             foreach ($data as $_key => $_val) {

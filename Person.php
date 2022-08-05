@@ -23,7 +23,11 @@ class Person
         $this->birthday = $birthday;
         $this->gender = $gender;
         $this->city = $city;
-        $selectResult = $this->db->select('users', 'id', $id);
+        $selectResult = $this->db->select('*' )
+            ->from( 'users.json' )
+            ->where( [ 'id' => $id ] )
+            ->get();
+
         if (count($selectResult) === 0) {
             $this->save();
         } else {
@@ -46,12 +50,17 @@ class Person
             'gender' => $this->gender,
             'city' => $this->city,
         );
-        $this->db->insert('users', $userArray, FALSE);
+        $this->db->insert( 'users.json',
+            $userArray
+       );
     }
 
     public function remove()
     {
-        $this->db->delete('users', 'id', $this->id);
+        $this->db->delete()
+            ->from( 'users.json' )
+            ->where( [ 'id' => $this->id ] )
+            ->trigger();
     }
 
     public static function birthdayToAge($birthday)
@@ -78,5 +87,18 @@ class Person
         $formatObj->age = self::birthdayToAge($this->birthday);
         $formatObj->genderText = self::genderToText($this->gender);
         return $formatObj;
+    }
+
+    public function __toString()
+    {
+        $userArray = array(
+            'id' => $this->id,
+            'firstname' => $this->firstname,
+            'lastname' => $this->lastname,
+            'birthday' => $this->birthday,
+            'gender' => $this->gender,
+            'city' => $this->city,
+        );
+        return json_encode($userArray);
     }
 }
