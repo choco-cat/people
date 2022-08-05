@@ -1,7 +1,7 @@
 <?php
 /**
- * Класс Person осуществляет сохранение полей пользователя, удаление
- * пользователя из БД, изменение полей.
+ * Person class saves user fields, deletes
+ * user from the database, changing fields.
  */
 
 namespace classes;

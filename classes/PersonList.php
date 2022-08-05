@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Класс PersonList работает со списком пользователей, получает экзепляры класса Person,
- * удаляет пользователя с помощью класса Person.
+ * The PersonList class works with a list of users, receives instances of the Person class,
+ * deletes the user using the Person class.
  */
 
 namespace classes;
