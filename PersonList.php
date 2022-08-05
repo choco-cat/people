@@ -5,7 +5,7 @@
  * удаляет пользователя с помощью класса Person.
  */
 
-if (!class_exists('Person')){
+if (!class_exists('Person')) {
     die('class Person not exists!');
 }
 
@@ -19,28 +19,23 @@ class PersonList
         $this->db = new JsonDB('./data/');;
         $this->personIds = $personIds;
 
-
+        $resultArr = [];
         if ($field && $fieldValue) {
-            $resultArr = [];
             foreach ($this->personIds as $key => $personId) {
 
                 if (is_array($field) && is_array($fieldValue)) {
                     $fieldArray = array();
-                    $fieldArray[] = [ 'id', $personId, '='];
+                    $fieldArray[] = ['id', $personId, '='];
                     foreach ($field as $key => $f) {
                         $fieldArray[] = array($f, $fieldValue[$key], $operator);
                     }
-
-                    $searchResult = $this->db->select( 'id'  )
-                        ->from( 'users.json' )
-                        ->where( $fieldArray, 'AND' )
-                        ->get();
                 } else {
-                    $searchResult = $this->db->select('id')
-                        ->from('users.json')
-                        ->where([['id', $personId, '='], [$field, $fieldValue, $operator]], 'AND')
-                        ->get();
+                    $fieldArray = [['id', $personId, '='], [$field, $fieldValue, $operator]];
                 }
+                $searchResult = $this->db->select('id')
+                    ->from('users.json')
+                    ->where($fieldArray, 'AND')
+                    ->get();
 
                 if (count($searchResult) > 0) {
                     $resultArr[] = $personId;
@@ -54,9 +49,9 @@ class PersonList
     {
         $persons = array();
         foreach ($this->personIds as $personId) {
-            $searchResult = $this->db->select( 'id'  )
-                ->from( 'users.json' )
-                ->where( [ 'id' => $personId] )
+            $searchResult = $this->db->select('id')
+                ->from('users.json')
+                ->where(['id' => $personId])
                 ->get();
 
             if (count($searchResult) > 0) {

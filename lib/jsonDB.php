@@ -70,18 +70,18 @@ class JsonDB
          */
 
         // Checks if DIR exists, if not create
-        if (! is_dir($this->dir)) {
+        if (!is_dir($this->dir)) {
             mkdir($this->dir, 0700);
         }
         // Checks if JSON file exists, if not create
-        if (! file_exists($this->file)) {
+        if (!file_exists($this->file)) {
             touch($this->file);
             // $this->commit();
         }
 
         if ($this->load == 'partial') {
             $this->fp = fopen($this->file, 'r+');
-            if (! $this->fp) {
+            if (!$this->fp) {
                 throw new \Exception('Unable to open json file');
             }
 
@@ -90,7 +90,7 @@ class JsonDB
                 $content = get_json_chunk($this->fp);
 
                 // We could not get the first chunk of JSON. Lets try to load everything then
-                if (! $content) {
+                if (!$content) {
                     $content = fread($this->fp, $size);
                 } else {
                     // We got the first chunk, we still need to put it into an array
@@ -109,11 +109,11 @@ class JsonDB
         }
 
         // Check if its arrays of jSON
-        if (! is_array($content) && is_object($content)) {
+        if (!is_array($content) && is_object($content)) {
             throw new \Exception('An array of json is required: Json data enclosed with []');
         }
         // An invalid jSON file
-        if (! is_array($content) && ! is_object($content)) {
+        if (!is_array($content) && !is_object($content)) {
             throw new \Exception('json is invalid');
         }
         $this->content = $content;
@@ -144,7 +144,7 @@ class JsonDB
         /**
          * Loads the jSON file
          *
-         * @param type $file. Accepts file path to jSON file
+         * @param type $file . Accepts file path to jSON file
          * @return type object
          */
 
@@ -174,8 +174,8 @@ class JsonDB
     /**
      * Implements regex search on where statement.
      *
-     * @param	string	$pattern			Regex pattern
-     * @param	int		$preg_match_flags	Flags for preg_grep(). See - https://www.php.net/manual/en/function.preg-match.php
+     * @param string $pattern Regex pattern
+     * @param int $preg_match_flags Flags for preg_grep(). See - https://www.php.net/manual/en/function.preg-match.php
      */
     public static function regex(string $pattern, int $preg_match_flags = 0): object
     {
@@ -212,17 +212,17 @@ class JsonDB
         $first_row = current($this->content);
         $this->content = [];
 
-        if (! empty($first_row)) {
+        if (!empty($first_row)) {
             $unmatched_columns = 0;
 
             foreach ($first_row as $column => $value) {
-                if (! isset($values[$column])) {
+                if (!isset($values[$column])) {
                     $values[$column] = null;
                 }
             }
 
             foreach ($values as $col => $val) {
-                if (! array_key_exists($col, $first_row)) {
+                if (!array_key_exists($col, $first_row)) {
                     $unmatched_columns = 1;
                     break;
                 }
@@ -247,7 +247,7 @@ class JsonDB
 
         if ($this->load === 'full') {
             // Write everything back into the file
-            fwrite($f, (! $this->content ? '[]' : json_encode($this->content, $this->json_opts['encode'])));
+            fwrite($f, (!$this->content ? '[]' : json_encode($this->content, $this->json_opts['encode'])));
         } elseif ($this->load === 'partial') {
             // Append it
             $this->append();
@@ -319,12 +319,12 @@ class JsonDB
 
     private function _update()
     {
-        if (! empty($this->last_indexes) && ! empty($this->where)) {
+        if (!empty($this->last_indexes) && !empty($this->where)) {
             foreach ($this->content as $i => $v) {
                 if (in_array($i, $this->last_indexes)) {
-                    $content = (array) $this->content[$i];
-                    if (! array_diff_key($this->update, $content)) {
-                        $this->content[$i] = (object) array_merge($content, $this->update);
+                    $content = (array)$this->content[$i];
+                    if (!array_diff_key($this->update, $content)) {
+                        $this->content[$i] = (object)array_merge($content, $this->update);
                     } else {
                         throw new \Exception('Update method has an off key');
                     }
@@ -332,13 +332,13 @@ class JsonDB
                     continue;
                 }
             }
-        } elseif (! empty($this->where) && empty($this->last_indexes)) {
+        } elseif (!empty($this->where) && empty($this->last_indexes)) {
             return;
         } else {
             foreach ($this->content as $i => $v) {
-                $content = (array) $this->content[$i];
-                if (! array_diff_key($this->update, $content)) {
-                    $this->content[$i] = (object) array_merge($content, $this->update);
+                $content = (array)$this->content[$i];
+                if (!array_diff_key($this->update, $content)) {
+                    $this->content[$i] = (object)array_merge($content, $this->update);
                 } else {
                     throw new \Exception('Update method has an off key ');
                 }
@@ -353,12 +353,12 @@ class JsonDB
      */
     public function trigger()
     {
-        $content = (! empty($this->where) ? $this->where_result() : $this->content);
+        $content = (!empty($this->where) ? $this->where_result() : $this->content);
         $return = false;
         if ($this->delete) {
-            if (! empty($this->last_indexes) && ! empty($this->where)) {
+            if (!empty($this->last_indexes) && !empty($this->where)) {
                 $this->content = array_filter($this->content, function ($index) {
-                    return ! in_array($index, $this->last_indexes);
+                    return !in_array($index, $this->last_indexes);
                 }, ARRAY_FILTER_USE_KEY);
 
                 $this->content = array_values($this->content);
@@ -368,7 +368,7 @@ class JsonDB
 
             $return = true;
             $this->delete = false;
-        } elseif (! empty($this->update)) {
+        } elseif (!empty($this->update)) {
             $this->_update();
             $this->update = [];
         } else {
@@ -397,7 +397,7 @@ class JsonDB
     {
         if ($b instanceof \stdClass) {
             if ($b->is_regex) {
-                return ! preg_match($b->value, (string) $a, $_, $b->options);
+                return !preg_match($b->value, (string)$a, $_, $b->options);
             }
 
             return -1;
@@ -405,13 +405,13 @@ class JsonDB
 
         if ($a instanceof \stdClass) {
             if ($a->is_regex) {
-                return ! preg_match($a->value, (string) $b, $_, $a->options);
+                return !preg_match($a->value, (string)$b, $_, $a->options);
             }
 
             return -1;
         }
 
-        return strcasecmp((string) $a, (string) $b);
+        return strcasecmp((string)$a, (string)$b);
     }
 
     /**
@@ -428,7 +428,7 @@ class JsonDB
         }
         // Filter array
         $r = array_filter($this->content, function ($row, $index) {
-            $row = (array) $row; // Convert first stage to array if object
+            $row = (array)$row; // Convert first stage to array if object
 
             // Check for rows intersecting with the where values.
             if (array_uintersect_uassoc($row, $this->where, [$this, 'intersect_value_check'], 'strcasecmp') /*array_intersect_assoc( $row, $this->where )*/) {
@@ -443,9 +443,9 @@ class JsonDB
         return array_values(obj_to_array($r));
     }
 
-    private function compare( $a, $b, $operator = '=')
+    private function compare($a, $b, $operator = '=')
     {
-        switch ($operator){
+        switch ($operator) {
             case '!=':
                 $result = $a != $b;
                 break;
@@ -462,7 +462,7 @@ class JsonDB
         return $result;
     }
 
-    private function create_condition($row, $where = [])
+    private function create_condition($row)
     {
         $condition = 1;
         foreach ($this->where as $where) {
@@ -487,19 +487,18 @@ class JsonDB
         foreach ($this->content as $index => $row) {
 
             // Make sure its array data type
-            $row = (array) $row;
+            $row = (array)$row;
 
             $this->create_condition($row);
 
-               if ($this->create_condition($row))
-                {
-                    $r[] = $row;
-                    // Append also each row array key
-                    $this->last_indexes[] = $index;
-                } else {
-                    continue;
-                }
+            if ($this->create_condition($row)) {
+                $r[] = $row;
+                // Append also each row array key
+                $this->last_indexes[] = $index;
+            } else {
+                continue;
             }
+        }
 
         return $r;
     }
@@ -537,11 +536,11 @@ class JsonDB
     /**
      * Generates SQL from JSON
      *
-     * @param	string	$from			JSON file to get data from
-     * @param	string	$to				Filename to write SQL into
-     * @param	bool	$create_table	If to include create table in this export
+     * @param string $from JSON file to get data from
+     * @param string $to Filename to write SQL into
+     * @param bool $create_table If to include create table in this export
      *
-     * @return	bool	Returns true if file was created, else false
+     * @return    bool    Returns true if file was created, else false
      */
     public function to_mysql(string $from, string $to, bool $create_table = true): bool
     {
@@ -552,7 +551,7 @@ class JsonDB
             $sql = "-- PHP-JSONDB JSON to MySQL Dump\n--\n\n";
             if ($create_table) {
                 // Should create table, generate a CREATE TABLE statement using the column of the first row
-                $first_row = (array) $this->content[0];
+                $first_row = (array)$this->content[0];
                 $columns = array_map(function ($column) use ($first_row) {
                     return sprintf("\t`%s` %s", $column, $this->_to_mysql_type(gettype($first_row[$column])));
                 }, array_keys($first_row));
@@ -561,10 +560,10 @@ class JsonDB
             }
 
             foreach ($this->content as $row) {
-                $row = (array) $row;
+                $row = (array)$row;
                 $values = array_map(function ($vv) {
                     $vv = (is_array($vv) || is_object($vv) ? serialize($vv) : $vv);
-                    return sprintf("'%s'", addslashes((string) $vv));
+                    return sprintf("'%s'", addslashes((string)$vv));
                 }, array_values($row));
 
                 $cols = array_map(function ($col) {
@@ -600,7 +599,7 @@ class JsonDB
 
     private function _process_order_by($content)
     {
-        if ($this->order_by && $content && in_array($this->order_by[0], array_keys((array) $content[0]))) {
+        if ($this->order_by && $content && in_array($this->order_by[0], array_keys((array)$content[0]))) {
             /*
                 * Check if order by was specified
                 * Check if there's actually a result of the query
@@ -612,7 +611,7 @@ class JsonDB
             $sorted = [];
 
             foreach ($content as $index => $value) {
-                $value = (array) $value;
+                $value = (array)$value;
                 // Save the index and value so we can use them to sort
                 $sort_keys[$index] = $value[$sort_column];
             }
@@ -626,7 +625,7 @@ class JsonDB
 
             // We are done with sorting, lets use the sorted array indexes to pull back the original content and return new content
             foreach ($sort_keys as $index => $value) {
-                $sorted[$index] = (array) $content[$index];
+                $sorted[$index] = (array)$content[$index];
             }
 
             $content = $sorted;
@@ -643,10 +642,10 @@ class JsonDB
             $content = $this->content;
         }
 
-        if ($this->select && ! in_array('*', $this->select)) {
+        if ($this->select && !in_array('*', $this->select)) {
             $r = [];
             foreach ($content as $id => $row) {
-                $row = (array) $row;
+                $row = (array)$row;
                 foreach ($row as $key => $val) {
                     if (in_array($key, $this->select)) {
                         $r[$id][$key] = $val;

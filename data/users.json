@@ -31,4 +31,13 @@
         "gender": 0,
         "city": "Mozyr"
     }
+,
+    {
+        "id": 33,
+        "firstname": "Nata33",
+        "lastname": "Kot3",
+        "birthday": "01.12.2003",
+        "gender": 0,
+        "city": "Minsk"
+    }
 ]
