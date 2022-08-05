@@ -1,20 +1,20 @@
 <?php
 
-function get_json_chunk($fp, int $start_depth = -1)
+function getJsonChunk($fp, int $start_depth = -1)
 {
     $bufsz = 8192;
     $start = false;
     $quotes = [false, false];
     $depth = 0;
-    $total_bytes_read = 0;
+    $totalBytesRead = 0;
     $end = false;
-    $cur_pos = 0;
+    $curPos = 0;
 
     if (!$fp) {
         return;
     }
 
-    $cur_pos = ftell($fp);
+    $curPos = ftell($fp);
     // Get total size of file
     fseek($fp, 0, SEEK_END);
     $size = ftell($fp);
@@ -26,22 +26,22 @@ function get_json_chunk($fp, int $start_depth = -1)
 
         if (false !== $buffer) {
             // So I do not have to do strlen to get read size which is linear
-            $read_count = ($size > $bufsz) ? $bufsz : $size;
-            $size -= $read_count;
+            $readCount = ($size > $bufsz) ? $bufsz : $size;
+            $size -= $readCount;
 
             if (false === $start) {
                 // Find first occurence of the curly bracket
                 $start = strpos($buffer, '{');
                 if (false === $start) {
-                    $total_bytes_read += $read_count;
+                    $totalBytesRead += $readCount;
                     continue;
                 } else {
                     $i = $start + 1;
-                    $start += $total_bytes_read;
-                    $total_bytes_read += $read_count;
+                    $start += $totalBytesRead;
+                    $totalBytesRead += $readCount;
                 }
             } else {
-                $total_bytes_read += $read_count;
+                $totalBytesRead += $readCount;
             }
 
             for (; isset($buffer[$i]); $i++) {
@@ -69,7 +69,7 @@ function get_json_chunk($fp, int $start_depth = -1)
 
                 if ('{' == $buffer[$i] && !$is_quoted) {
                     if ($depth == $start_depth) {
-                        $start = $total_bytes_read - $read_count + $i;
+                        $start = $totalBytesRead - $readCount + $i;
                     }
                     $depth++;
                 }
@@ -77,7 +77,7 @@ function get_json_chunk($fp, int $start_depth = -1)
                 if ('}' == $buffer[$i] && !$is_quoted) {
                     $depth--;
                     if ($depth == $start_depth) {
-                        $end = $total_bytes_read - $read_count + $i + 1;
+                        $end = $totalBytesRead - $readCount + $i + 1;
                         break 2;
                     }
                 }
@@ -92,7 +92,7 @@ function get_json_chunk($fp, int $start_depth = -1)
         $chunk = fread($fp, $end - $start);
     }
 
-    fseek($fp, $cur_pos, SEEK_SET);
+    fseek($fp, $curPos, SEEK_SET);
 
     return $chunk;
 }

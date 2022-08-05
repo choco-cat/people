@@ -2,6 +2,7 @@
 
 define('BASE_PATH', dirname(realpath(__FILE__)) . '/');
 require BASE_PATH . 'lib/JsonDB.php';
+require BASE_PATH . 'lib/dbo.php';
 require BASE_PATH . 'Person.php';
 require BASE_PATH . 'PersonList.php';
 
@@ -36,3 +37,4 @@ echo(new PersonList([1, 2, 3, 33, 35], 'gender', '1', '='));
 
 echo '<br><br>persons list [1, 2, 3, 33, 35], gender = 1, city = Mozyr:<br>';
 echo(new PersonList([1, 2, 3, 33, 35], ['gender', 'city'], ['1', 'Mozyr'], '='));
+

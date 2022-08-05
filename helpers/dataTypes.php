@@ -7,7 +7,7 @@
  *
  * @return array|mixed
  */
-function obj_to_array($obj)
+function objToArray($obj)
 {
     // Not an array or object? Return back what was given
     if (!is_array($obj) && !is_object($obj))
@@ -16,7 +16,7 @@ function obj_to_array($obj)
     $arr = (array)$obj;
 
     foreach ($arr as $key => $value) {
-        $arr[$key] = obj_to_array($value);
+        $arr[$key] = objToArray($value);
     }
 
     return $arr;
