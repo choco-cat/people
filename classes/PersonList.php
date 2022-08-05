@@ -5,7 +5,11 @@
  * удаляет пользователя с помощью класса Person.
  */
 
-if (!class_exists('Person')) {
+namespace classes;
+
+use lib\jsonDB;
+
+if (!class_exists('\classes\Person')) {
     die('class Person not exists!');
 }
 
@@ -21,7 +25,7 @@ class PersonList
 
         $resultArr = [];
         if ($field && $fieldValue) {
-            foreach ($this->personIds as $key => $personId) {
+            foreach ($this->personIds as $personId) {
 
                 if (is_array($field) && is_array($fieldValue)) {
                     $fieldArray = array();

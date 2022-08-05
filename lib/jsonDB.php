@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1);
+namespace lib;
+
 require BASE_PATH . 'helpers/json.php';
 require BASE_PATH . 'helpers/dataTypes.php';
 
@@ -443,6 +444,11 @@ class JsonDB
         return array_values(objToArray($r));
     }
 
+    /**
+     * Throws a few conditions for where AND
+     *
+     * @return bool
+     */
     private function compare($a, $b, $operator = '=')
     {
         switch ($operator) {

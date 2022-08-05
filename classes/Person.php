@@ -1,9 +1,13 @@
 <?php
-
 /**
  * Класс Person осуществляет сохранение полей пользователя, удаление
  * пользователя из БД, изменение полей.
  */
+
+namespace classes;
+
+use lib\jsonDB;
+
 class Person
 {
     public $id;
@@ -16,7 +20,7 @@ class Person
 
     public function __construct($id, $firstname, $lastname, $birthday, $gender, $city)
     {
-        $this->db = new JsonDB('./data/');
+        $this->db = new jsonDB('./data/');
         $this->id = $id;
         $this->firstname = $firstname;
         $this->lastname = $lastname;
@@ -80,7 +84,7 @@ class Person
 
     public function formatFields()
     {
-        $formatObj = new StdClass();
+        $formatObj = new \StdClass();
         foreach (get_object_vars($this) as $key => $value) {
             $formatObj->$key = $value;
         }
