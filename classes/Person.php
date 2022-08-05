@@ -17,6 +17,7 @@ class Person
     public $gender;
     public $city;
     private $db;
+    public $errors = [];
 
     public function __construct($id, $firstname, $lastname, $birthday, $gender, $city)
     {
@@ -33,7 +34,11 @@ class Person
             ->get();
 
         if (count($selectResult) === 0) {
-            $this->save();
+            $this->validate();
+            if (!$this->errors) {
+                $this->save();
+            }
+
         } else {
             $this->id = $selectResult[0]['id'];
             $this->firstname = $selectResult[0]['firstname'];
@@ -41,6 +46,34 @@ class Person
             $this->birthday = $selectResult[0]['birthday'];
             $this->gender = $selectResult[0]['gender'];
             $this->city = $selectResult[0]['city'];
+        }
+    }
+
+    public function validate()
+    {
+        preg_match('/(?=.*[0-9])/i', $this->id, $matches);
+        if (count($matches) === 0){
+            $this->errors[] = 'id должен быть числовым!';
+        }
+        preg_match('/(?=.*[a-zа-яё])/i', $this->firstname, $matches);
+        if (count($matches) === 0){
+            $this->errors[] = 'Имя должно быть символьным!';
+        }
+        preg_match('/(?=.*[a-zа-яё])/i', $this->lastname, $matches);
+        if (count($matches) === 0){
+            $this->errors[] = 'Фамилия должна быть символьным!';
+        }
+        preg_match('/^(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.]\d{4}$/i', $this->birthday, $matches);
+        if (count($matches) === 0){
+            $this->errors[] = 'Неверная дата!';
+        }
+        preg_match('/^[0|1]{1}$/i', $this->gender, $matches);
+        if (count($matches) === 0){
+            $this->errors[] = 'Пол может быть 0 или 1';
+        }
+        preg_match('/(?=.*[a-zа-яё])+/i', $this->city, $matches);
+        if (count($matches) === 0){
+            $this->errors[] = 'Город должен быть символьным!';
         }
     }
 
@@ -95,6 +128,10 @@ class Person
 
     public function __toString()
     {
+        if ($this->errors) {
+            return 'Ошибка создания объекта! ' . '<br>' . implode('<br>', $this->errors) . '<br>';
+        }
+
         $userArray = array(
             'id' => $this->id,
             'firstname' => $this->firstname,
